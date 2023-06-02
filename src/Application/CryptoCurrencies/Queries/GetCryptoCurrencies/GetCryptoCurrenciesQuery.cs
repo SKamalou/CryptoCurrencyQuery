@@ -1,12 +1,23 @@
-﻿using MediatR;
+﻿using CryptoCurrencyQuery.Application.Common.Interfaces;
+using CryptoCurrencyQuery.Domain.ValueObjects;
+using MediatR;
 
 namespace CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCryptoCurrencies;
-public record GetCryptoCurrenciesQuery : IRequest<List<CryptoCurrencyBriedDto>>;
 
-public class GetCryptoCurrenciesQueryHandler : IRequestHandler<GetCryptoCurrenciesQuery, List<CryptoCurrencyBriedDto>>
+public record GetCryptoCurrenciesQuery : IRequest<List<CurrencySymbol>>;
+
+public class GetCryptoCurrenciesQueryHandler : IRequestHandler<GetCryptoCurrenciesQuery, List<CurrencySymbol>>
 {
-    public async Task<List<CryptoCurrencyBriedDto>> Handle(GetCryptoCurrenciesQuery request, CancellationToken cancellationToken)
+    private readonly ICryptoCurrencyService _cryptoCurrencyService;
+
+    public GetCryptoCurrenciesQueryHandler(ICryptoCurrencyService cryptoCurrencyService)
     {
-        return await Task.FromResult(new List<CryptoCurrencyBriedDto>() { new CryptoCurrencyBriedDto { Symbol = "BTC" }, new CryptoCurrencyBriedDto { Symbol = "GBP" }, new CryptoCurrencyBriedDto { Symbol = "EUR" } });
+        _cryptoCurrencyService = cryptoCurrencyService ?? throw new ArgumentNullException(nameof(cryptoCurrencyService));
+    }
+
+    public async Task<List<CurrencySymbol>> Handle(GetCryptoCurrenciesQuery request, CancellationToken cancellationToken)
+    {
+        var result = await _cryptoCurrencyService.GetCryptoCurrencySymbolsAsync(cancellationToken);
+        return result.ToList();
     }
 }

@@ -1,19 +1,22 @@
 using CryptoCurrencyQuery.Infrastructure.Persistence;
+using WebUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebUIServices();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
     app.UseDeveloperExceptionPage();
-    app.UseMigrationsEndPoint();
 
     // Initialise and seed database
     using (var scope = app.Services.CreateScope())
@@ -29,28 +32,13 @@ else
     app.UseHsts();
 }
 
-app.UseHealthChecks("/health");
-app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-app.UseSwaggerUi3(settings =>
-{
-    settings.Path = "/api";
-    settings.DocumentPath = "/api/specification.json";
-});
-
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseIdentityServer();
-app.UseAuthorization();
-
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+        name: "default",
+        pattern: "api/{controller}/{action=Index}/{id?}");
 
-app.MapRazorPages();
-
-app.MapFallbackToFile("index.html");
+//app.MapFallbackToFile("index.html");
 
 app.Run();

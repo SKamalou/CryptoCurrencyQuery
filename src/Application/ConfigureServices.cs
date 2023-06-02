@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using CryptoCurrencyQuery.Application.Common.Behaviours;
+using CryptoCurrencyQuery.Application.Common.Interfaces;
 using FluentValidation;
 using MediatR;
 
@@ -16,6 +17,8 @@ public static class ConfigureServices
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+        services.AddTransient<ICurrentUserService, CurrentUserService>();
+        services.AddTransient<IIdentityService, IdentityService>();
 
         return services;
     }

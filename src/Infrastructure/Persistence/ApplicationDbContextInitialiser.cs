@@ -13,12 +13,12 @@ public class ApplicationDbContextInitialiser
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context)
     {
         _logger = logger;
         _context = context;
-        _userManager = userManager;
-        _roleManager = roleManager;
+        //_userManager = userManager;
+        //_roleManager = roleManager;
     }
 
     public async Task InitialiseAsync()
@@ -55,22 +55,22 @@ public class ApplicationDbContextInitialiser
         // Default roles
         var administratorRole = new IdentityRole("Administrator");
 
-        if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
-        {
-            await _roleManager.CreateAsync(administratorRole);
-        }
+        //if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
+        //{
+        //    await _roleManager.CreateAsync(administratorRole);
+        //}
 
         // Default users
         var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
 
-        if (_userManager.Users.All(u => u.UserName != administrator.UserName))
-        {
-            await _userManager.CreateAsync(administrator, "Administrator1!");
-            if (!string.IsNullOrWhiteSpace(administratorRole.Name))
-            {
-                await _userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
-            }
-        }
+        //if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+        //{
+        //    await _userManager.CreateAsync(administrator, "Administrator1!");
+        //    if (!string.IsNullOrWhiteSpace(administratorRole.Name))
+        //    {
+        //        await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
+        //    }
+        //}
 
         // Default data
         // Seed, if necessary
@@ -87,6 +87,19 @@ public class ApplicationDbContextInitialiser
                     new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
                 }
             });
+
+            await _context.SaveChangesAsync();
+        }
+
+        if (!_context.PopularCurrencies.Any())
+        {
+            _context.PopularCurrencies.AddRange(
+                new PopularCurrency { Symbol = "USD" }
+                //new PopularCurrency { Symbol = "EUR" },
+                //new PopularCurrency { Symbol = "BRL" },
+                //new PopularCurrency { Symbol = "GBP" },
+                //new PopularCurrency { Symbol = "AUD" }
+                );
 
             await _context.SaveChangesAsync();
         }
