@@ -1,12 +1,9 @@
 ﻿namespace WebUI.Models;
 
-public class ApiSuccessResult<TResult> : ApiResult
+public class ApiSuccessResult<TResult> : ApiResult<TResult>
 {
     public ApiSuccessResult(TResult data)
-        : base(true)
+        : base(true, data)
     {
-        Data = data;
     }
-
-    public TResult Data { get; set; }
 }

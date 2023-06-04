@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 
 namespace CryptoCurrencyQuery.Infrastructure.Common;
-internal static class ConfigurationExtensions
+public static class ConfigurationExtensions
 {
     public static T BindTo<T>(this IConfiguration configuration, string key) where T : class, new()
     {

@@ -1,14 +1,11 @@
-﻿namespace WebUI.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public class ApiFailureResult : ApiResult
+namespace WebUI.Models;
+
+public class ApiFailureResult<TFailureDetails> : ApiResult<TFailureDetails> where TFailureDetails : ProblemDetails
 {
-    public ApiFailureResult(int errorCode, string errorMessage)
-    : base(false)
+    public ApiFailureResult(TFailureDetails data)
+        : base(false, data)
     {
-        ErrorCode = errorCode;
-        ErrorMessage = errorMessage;
     }
-
-    public int ErrorCode { get; set; }
-    public string ErrorMessage { get; set; }
 }

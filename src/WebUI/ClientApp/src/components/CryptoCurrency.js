@@ -8,8 +8,14 @@ export function CryptoCurrency() {
 	useEffect(() => {
 		async function fetchOptions() {
       const response = await fetch('api/cryptocurrencies');
-			const optionsData = await response.json();
-			setOptions(optionsData);
+      const optionsData = await response.json();
+
+      if (!optionsData.success) {
+        console.error(optionsData.data);
+        return;
+      }
+
+      setOptions(optionsData.data);
 		}
 
 		fetchOptions();
@@ -17,8 +23,15 @@ export function CryptoCurrency() {
 
   useEffect(() => {
 		async function fetchLastSelectedCrypto() {
-			const response = await fetch('api/cryptocurrencies/selected');
-			const lastSelectedCrypto = await response.text();
+      const response = await fetch('api/cryptocurrencies/selected');
+      const selectedCryptoData = await response.json();
+
+      if (!selectedCryptoData.success) {
+        console.error(selectedCryptoData.data);
+        return;
+      }
+
+      const lastSelectedCrypto = selectedCryptoData.data;
 
       if (options.find(opt => opt.symbol == lastSelectedCrypto) != null)
 				setSelectedCrypto(lastSelectedCrypto);
@@ -28,10 +41,18 @@ export function CryptoCurrency() {
   }, [options]);
 
 	useEffect(() => {
-		async function fetchData() {
+    async function fetchData() {
+      setQuotes([]);
+
       const response = await fetch('api/cryptocurrencies/quotes/' + selectedCrypto);
-			const data = await response.json();
-			setQuotes(data);
+      const quotesData = await response.json();
+
+      if (!quotesData.success) {
+        console.error(quotesData.data);
+        return;
+      }
+
+      setQuotes(quotesData.data);
 		}
 
 		if (selectedCrypto) {

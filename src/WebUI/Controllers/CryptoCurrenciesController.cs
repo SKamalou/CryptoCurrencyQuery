@@ -1,11 +1,11 @@
 ﻿using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCryptoCurrencies;
 using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCurrentQuotes;
-using CryptoCurrencyQuery.Domain.Exceptions;
 using CryptoCurrencyQuery.Domain.ValueObjects;
 using CryptoCurrencyQuery.Infrastructure.Common;
+using CryptoCurrencyQuery.Infrastructure.Configs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using Serilog;
+using Microsoft.Extensions.Configuration;
 
 namespace CryptoCurrencyQuery.WebUI.Controllers;
 
@@ -15,52 +15,40 @@ public class CryptoCurrenciesController : ApiControllerBase
     private const string listOfCryptoCurrenciesCacheKey = "ListOfCryptoCurrenciesCacheKey";
 
     private readonly IDistributedCache _cache;
+    private readonly IConfiguration _configuration;
 
-    public CryptoCurrenciesController(IDistributedCache cache)
+    public CryptoCurrenciesController(IDistributedCache cache,IConfiguration configuration)
     {
         _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
     [HttpGet]
     public async Task<ActionResult<List<CurrencySymbol>>> GetAllCryptoCurrencies(CancellationToken cancellationToken)
     {
-        Log.Debug("CryptoCurrenciesController: Start the call.");
-
         List<CurrencySymbol> symbols;
 
         if (_cache.TryGetValue(listOfCryptoCurrenciesCacheKey, out symbols))
             return Ok(symbols);
 
-        try
-        {
-            symbols = await Mediator.Send(new GetCryptoCurrenciesQuery());
+        symbols = await Mediator.Send(new GetCryptoCurrenciesQuery(), cancellationToken);
 
-            var cacheEntryOptions = new DistributedCacheEntryOptions()
-                            .SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
+        var cacheConfig = _configuration.BindTo<CachingConfig>();
+        var cacheEntryOptions = new DistributedCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(cacheConfig.CryptoCurrenciesExpireTimeInMinute));
 
-            await _cache.SetAsync(listOfCryptoCurrenciesCacheKey, symbols, cacheEntryOptions);
+        await _cache.SetAsync(listOfCryptoCurrenciesCacheKey, symbols, cacheEntryOptions);
 
-            return Ok(symbols);
-        }
-        catch (CryptoCurrencyException ex)
-        {
-            return new ContentResult { StatusCode = 500, Content = ex.Message };
-        }
-        catch (OperationCanceledException)
-        {
-            Log.Debug("CryptoCurrenciesController: The operation was canceled.");
-
-            return NoContent();
-        }
+        return Ok(symbols);
     }
 
     [HttpGet("selected")]
-    public async Task<string?> GetLastSelectedCryptoCurrency()
+    public async Task<ActionResult<string?>> GetLastSelectedCryptoCurrency()
     {
         if (_cache.TryGetValue(lastSelectedCryptoCurrencyCacheKey, out string? symbol))
-            return await Task.FromResult(symbol);
+            return Ok(symbol);
 
-        return await Task.FromResult("");
+        return Ok("");
     }
 
     [HttpGet("quotes/{symbol}")]
@@ -68,24 +56,9 @@ public class CryptoCurrenciesController : ApiControllerBase
     {
         await _cache.SetAsync(lastSelectedCryptoCurrencyCacheKey, symbol);
 
-        Log.Debug("CryptoCurrenciesController: Start the call.");
+        var command = new GetCurrentQuotesQuery { Symbol = symbol };
+        var result = await Mediator.Send(command, cancellationToken);
 
-        try
-        {
-            GetCurrentQuotesQuery command = new GetCurrentQuotesQuery { Symbol = symbol };
-            var result = await Mediator.Send(command);
-            
-            return Ok(result);
-        }
-        catch (CryptoCurrencyException ex)
-        {
-            return new ContentResult { StatusCode = 500, Content = ex.Message };
-        }
-        catch (OperationCanceledException)
-        {
-            Log.Debug("CryptoCurrenciesController: The operation was canceled.");
-
-            return NoContent();
-        }
+        return Ok(result);
     }
 }
