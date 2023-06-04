@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using CryptoCurrencyQuery.Application.Common.Interfaces;
+﻿using CryptoCurrencyQuery.Application.Common.Interfaces;
 using CryptoCurrencyQuery.Application.Common.Models;
-using CryptoCurrencyQuery.Domain.Enums;
 using CryptoCurrencyQuery.Domain.ValueObjects;
 using MediatR;
 
@@ -24,12 +22,15 @@ public class GetCurrentQuotesQueryHandler : IRequestHandler<GetCurrentQuotesQuer
 
     public async Task<List<CryptoCurrencyQuoteDto>> Handle(GetCurrentQuotesQuery request, CancellationToken cancellationToken)
     {
-        IEnumerable<CurrencySymbol> targeCurrencySymbols = _context.PopularCurrencies.Select(currency => new CurrencySymbol(currency.Symbol));
+        IEnumerable<CurrencySymbol> targetCurrencySymbols = _context.PopularCurrencies.Select(currency => new CurrencySymbol(currency.Symbol));
+
+        if (!targetCurrencySymbols.Any())
+            return new List<CryptoCurrencyQuoteDto>();
 
         CryptoCurrencyQuotesLookupDto getCryptoCurrencyQuotesQuery = new CryptoCurrencyQuotesLookupDto
         {
             SourceCryptoCurrencySymbol = new CurrencySymbol(request.Symbol),
-            TargeCurrencySymbols = targeCurrencySymbols
+            TargeCurrencySymbols = targetCurrencySymbols
         };
 
         var cryptoCurrencyQuotes = await _cryptoCurrencyService.GetCryptoCurrencyQuotesAsync(getCryptoCurrencyQuotesQuery, cancellationToken);

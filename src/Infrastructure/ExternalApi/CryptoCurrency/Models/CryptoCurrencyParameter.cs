@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Refit;
+﻿using Refit;
 
 namespace CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency.Models;
-internal class CryptoCurrencyParameter
+public class CryptoCurrencyParameter
 {
     [AliasAs("symbol")]
     public string SourceSymbol { get; set; }

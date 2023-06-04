@@ -12,21 +12,24 @@ export function CryptoCurrency() {
 			setOptions(optionsData);
 		}
 
+		fetchOptions();
+	}, []);
+
+  useEffect(() => {
 		async function fetchLastSelectedCrypto() {
 			const response = await fetch('api/cryptocurrencies/selected');
 			const lastSelectedCrypto = await response.text();
 
-			if (options.indexOf(lastSelectedCrypto) > -1)
+      if (options.find(opt => opt.symbol == lastSelectedCrypto) != null)
 				setSelectedCrypto(lastSelectedCrypto);
 		}
 
-		fetchOptions();
 		fetchLastSelectedCrypto();
-	}, []);
+  }, [options]);
 
 	useEffect(() => {
 		async function fetchData() {
-      const response = await fetch('api/cryptocurrencies/' + selectedCrypto);
+      const response = await fetch('api/cryptocurrencies/quotes/' + selectedCrypto);
 			const data = await response.json();
 			setQuotes(data);
 		}

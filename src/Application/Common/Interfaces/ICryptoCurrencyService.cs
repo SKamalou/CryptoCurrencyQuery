@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CryptoCurrencyQuery.Application.Common.Models;
+﻿using CryptoCurrencyQuery.Application.Common.Models;
 using CryptoCurrencyQuery.Domain.ValueObjects;
 
 namespace CryptoCurrencyQuery.Application.Common.Interfaces;

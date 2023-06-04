@@ -1,8 +1,5 @@
-﻿using CryptoCurrencyQuery.Application.Common.Interfaces;
-using CryptoCurrencyQuery.Application.Common.Models;
-using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCryptoCurrencies;
+﻿using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCryptoCurrencies;
 using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCurrentQuotes;
-using CryptoCurrencyQuery.Domain.Enums;
 using CryptoCurrencyQuery.Domain.Exceptions;
 using CryptoCurrencyQuery.Domain.ValueObjects;
 using CryptoCurrencyQuery.Infrastructure.Common;
@@ -66,7 +63,7 @@ public class CryptoCurrenciesController : ApiControllerBase
         return await Task.FromResult("");
     }
 
-    [HttpGet("{symbol}")]
+    [HttpGet("quotes/{symbol}")]
     public async Task<ActionResult<List<CryptoCurrencyQuoteDto>>> GetCryptoCurrencyDetails(string symbol, CancellationToken cancellationToken)
     {
         await _cache.SetAsync(lastSelectedCryptoCurrencyCacheKey, symbol);

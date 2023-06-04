@@ -9,7 +9,7 @@ using Polly.Timeout;
 using Refit;
 
 namespace CryptoCurrencyQuery.Infrastructure.Services;
-internal class CryptoCurrencyService : ICryptoCurrencyService
+public class CryptoCurrencyService : ICryptoCurrencyService
 {
     private readonly ICryptoCurrencyClient _cryptoCurrencyClient;
 

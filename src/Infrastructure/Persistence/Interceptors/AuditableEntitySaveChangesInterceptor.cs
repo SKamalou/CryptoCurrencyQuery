@@ -1,5 +1,4 @@
-﻿using CryptoCurrencyQuery.Application.Common.Interfaces;
-using CryptoCurrencyQuery.Domain.Common;
+﻿using CryptoCurrencyQuery.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -8,14 +7,6 @@ namespace CryptoCurrencyQuery.Infrastructure.Persistence.Interceptors;
 
 public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 {
-    private readonly ICurrentUserService _currentUserService;
-
-    public AuditableEntitySaveChangesInterceptor(
-        ICurrentUserService currentUserService)
-    {
-        _currentUserService = currentUserService;
-    }
-
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
         UpdateEntities(eventData.Context);
@@ -38,13 +29,11 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedBy = _currentUserService.UserId;
                 entry.Entity.Created = DateTime.Now;
             } 
 
             if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
             {
-                entry.Entity.LastModifiedBy = _currentUserService.UserId;
                 entry.Entity.LastModified = DateTime.Now;
             }
         }

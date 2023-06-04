@@ -1,14 +1,10 @@
 ﻿using CryptoCurrencyQuery.Application.Common.Interfaces;
-using CryptoCurrencyQuery.Infrastructure;
 using CryptoCurrencyQuery.Infrastructure.Common;
+using CryptoCurrencyQuery.Infrastructure.Configs;
 using CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency;
-using CryptoCurrencyQuery.Infrastructure.Files;
-using CryptoCurrencyQuery.Infrastructure.Identity;
 using CryptoCurrencyQuery.Infrastructure.Persistence;
 using CryptoCurrencyQuery.Infrastructure.Persistence.Interceptors;
 using CryptoCurrencyQuery.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Polly;
@@ -41,24 +37,6 @@ public static class ConfigureServices
 
         services.AddScoped<ApplicationDbContextInitialiser>();
 
-        //services
-            //.AddDefaultIdentity<ApplicationUser>()
-            //.AddRoles<IdentityRole>()
-            //.AddEntityFrameworkStores<ApplicationDbContext>();
-
-        //services.AddIdentityServer()
-        //    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
-        //services.AddTransient<IIdentityService, IdentityService>();
-        services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
-
-        //services.AddAuthentication()
-        //    .AddIdentityServerJwt();
-
-        //services.AddAuthorization(options =>
-        //    options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
-
-
         WaitAndRetryConfig wrc = configuration.BindTo<WaitAndRetryConfig>();
 
         AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
@@ -69,10 +47,13 @@ public static class ConfigureServices
         AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy
             .TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(wrc.Timeout));
 
+        CryptoCurrencyApiConfig api = configuration.BindTo<CryptoCurrencyApiConfig>();
+        services.AddTransient<AuthorizationMessageHandler>();
         services.AddRefitClient<ICryptoCurrencyClient>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://pro-api.coinmarketcap.com"))
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(api.BaseAddress))
             .AddPolicyHandler(retryPolicy)
-            .AddPolicyHandler(timeoutPolicy); // RefitSettings does not work.
+            .AddPolicyHandler(timeoutPolicy)
+            .AddHttpMessageHandler<AuthorizationMessageHandler>();
 
         services.AddTransient<ICryptoCurrencyService, CryptoCurrencyService>();
 

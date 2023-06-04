@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency.Models;
-internal class CryptoCurrencyDto
+﻿namespace CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency.Models;
+public class CryptoCurrencyDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
