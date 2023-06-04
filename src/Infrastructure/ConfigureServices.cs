@@ -37,20 +37,20 @@ public static class ConfigureServices
 
         services.AddScoped<ApplicationDbContextInitialiser>();
 
-        WaitAndRetryConfig wrc = configuration.BindTo<WaitAndRetryConfig>();
+        var waitAndRetryConfig = configuration.BindTo<WaitAndRetryConfig>();
 
         AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
             .HandleTransientHttpError()
             .Or<TimeoutRejectedException>() // Thrown by Polly's TimeoutPolicy if the inner call gets timeout.
-            .WaitAndRetryAsync(wrc.Retry, _ => TimeSpan.FromMilliseconds(wrc.Wait));
+            .WaitAndRetryAsync(waitAndRetryConfig.Retry, _ => TimeSpan.FromMilliseconds(waitAndRetryConfig.Wait));
 
         AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy
-            .TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(wrc.Timeout));
+            .TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(waitAndRetryConfig.Timeout));
 
-        CryptoCurrencyApiConfig api = configuration.BindTo<CryptoCurrencyApiConfig>();
+        var apiConfig = configuration.BindTo<CryptoCurrencyApiConfig>();
         services.AddTransient<AuthorizationMessageHandler>();
         services.AddRefitClient<ICryptoCurrencyClient>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(api.BaseAddress))
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(apiConfig.BaseAddress))
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy)
             .AddHttpMessageHandler<AuthorizationMessageHandler>();

@@ -17,17 +17,17 @@ public class CryptoCurrencyService : ICryptoCurrencyService
 
     public async Task<IEnumerable<CurrencySymbol>> GetCryptoCurrencySymbolsAsync(CancellationToken cancellationToken)
     {
-        List<CryptoCurrencyDto> cryptoCurrencies = await GetListAsync(cancellationToken);
+        var cryptoCurrencies = await GetListAsync(cancellationToken);
 
         return cryptoCurrencies.Select(cryptoCurrency => new CurrencySymbol(cryptoCurrency.Symbol));
     }
 
     public async Task<Dictionary<CurrencySymbol, Quote>> GetCryptoCurrencyQuotesAsync(CryptoCurrencyQuotesLookupDto quotesLookup, CancellationToken cancellationToken)
     {
-        Dictionary<CurrencySymbol, Quote> quotes = new Dictionary<CurrencySymbol, Quote>();
+        var quotes = new Dictionary<CurrencySymbol, Quote>();
         foreach (CurrencySymbol symbol in quotesLookup.TargeCurrencySymbols)
         {
-            Quote quote = await GetCryptoCurrencyQuoteAsync(quotesLookup.SourceCryptoCurrencySymbol, symbol, cancellationToken);
+            var quote = await GetCryptoCurrencyQuoteAsync(quotesLookup.SourceCryptoCurrencySymbol, symbol, cancellationToken);
             quotes.Add(symbol, quote);
         }
 
@@ -59,7 +59,7 @@ public class CryptoCurrencyService : ICryptoCurrencyService
     {
         try
         {
-            CryptoCurrencyParameter parameter = new CryptoCurrencyParameter { SourceSymbol = sourceCryptoCurrencySymbol.Symbol, TargetSymbol = targeCurrencySymbol.Symbol };
+            var parameter = new CryptoCurrencyParameter { SourceSymbol = sourceCryptoCurrencySymbol.Symbol, TargetSymbol = targeCurrencySymbol.Symbol };
             var result = await _cryptoCurrencyClient.GetPriceAsync(parameter, cancellationToken);
 
             if (result.Status?.ErrorCode > 0)

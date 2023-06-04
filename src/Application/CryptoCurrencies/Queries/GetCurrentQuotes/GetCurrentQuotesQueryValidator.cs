@@ -6,6 +6,10 @@ public class GetCurrentQuotesQueryValidator : AbstractValidator<GetCurrentQuotes
     public GetCurrentQuotesQueryValidator()
     {
         RuleFor(x => x.Symbol)
-            .NotEmpty().WithMessage("Symbol is required.");
+            .NotNull()
+            .NotEmpty()
+            .MinimumLength(2)
+            .MaximumLength(10)
+            .WithMessage("Symbol is required.");
     }
 }

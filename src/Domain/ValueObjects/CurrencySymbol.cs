@@ -10,7 +10,7 @@ public class CurrencySymbol : ValueObject
         if (string.IsNullOrEmpty(symbol))
             throw new InvalidSymbolException();
 
-        if (symbol.Length > 10 || symbol.Length < 3)
+        if (symbol.Length > 10 || symbol.Length < 2)
             throw new InvalidSymbolException();
 
         this.Symbol = symbol.ToUpper();

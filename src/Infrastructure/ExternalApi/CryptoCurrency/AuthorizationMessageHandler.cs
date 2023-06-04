@@ -16,13 +16,13 @@ public class AuthorizationMessageHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancelToken)
     {
-        HttpRequestHeaders headers = request.Headers;
+        var headers = request.Headers;
 
         if (!headers.Contains(ApiKeyHeaderKey))
         {
-            CryptoCurrencyApiConfig api = _configuration.BindTo<CryptoCurrencyApiConfig>();
+            var apiConfig = _configuration.BindTo<CryptoCurrencyApiConfig>();
 
-            headers.Add(ApiKeyHeaderKey, api.ApiKey);
+            headers.Add(ApiKeyHeaderKey, apiConfig.ApiKey);
         }
 
         return await base.SendAsync(request, cancelToken);

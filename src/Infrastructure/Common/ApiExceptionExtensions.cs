@@ -6,7 +6,7 @@ internal static class ApiExceptionExtensions
 {
     public static CryptoCurrencyException ToCryptoCurrencyException(this ApiException exception)
     {
-        string message = $"{exception.Message} @{exception.HttpMethod.Method}('{exception.Uri?.AbsoluteUri}') Content: '{exception.Content}'";
+        var message = $"{exception.Message} @{exception.HttpMethod.Method}('{exception.Uri?.AbsoluteUri}') Content: '{exception.Content}'";
         return new CryptoCurrencyException(message, exception);
     }
 }

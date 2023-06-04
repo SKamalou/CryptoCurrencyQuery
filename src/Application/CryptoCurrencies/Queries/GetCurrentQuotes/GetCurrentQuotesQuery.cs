@@ -22,12 +22,12 @@ public class GetCurrentQuotesQueryHandler : IRequestHandler<GetCurrentQuotesQuer
 
     public async Task<List<CryptoCurrencyQuoteDto>> Handle(GetCurrentQuotesQuery request, CancellationToken cancellationToken)
     {
-        IEnumerable<CurrencySymbol> targetCurrencySymbols = _context.PopularCurrencies.Select(currency => new CurrencySymbol(currency.Symbol));
+        var targetCurrencySymbols = _context.PopularCurrencies.Select(currency => new CurrencySymbol(currency.Symbol));
 
         if (!targetCurrencySymbols.Any())
             return new List<CryptoCurrencyQuoteDto>();
 
-        CryptoCurrencyQuotesLookupDto getCryptoCurrencyQuotesQuery = new CryptoCurrencyQuotesLookupDto
+        var getCryptoCurrencyQuotesQuery = new CryptoCurrencyQuotesLookupDto
         {
             SourceCryptoCurrencySymbol = new CurrencySymbol(request.Symbol),
             TargeCurrencySymbols = targetCurrencySymbols
