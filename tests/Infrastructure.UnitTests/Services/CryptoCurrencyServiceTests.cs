@@ -112,16 +112,16 @@ internal class CryptoCurrencyServiceTests
         #region Mock ICryptoCurrencyClient
         var mockCryptoCurrencyClient = new Mock<ICryptoCurrencyClient>();
 
-        CryptoCurrencyParameter eurParameter = new CryptoCurrencyParameter { SourceSymbol = Constants.BTC, TargetSymbol = Constants.EUR };
+        var eurParameter = new CryptoCurrencyParameter { SourceSymbol = Constants.BTC, TargetSymbol = Constants.EUR };
         var eurSuccessResult = GetQuoteSuccessResult(Constants.EUR, Constants.BTCtoEUR);
         mockCryptoCurrencyClient.Setup(mock => mock.GetPriceAsync(It.Is<CryptoCurrencyParameter>(q => IsEqual(eurParameter, q)), new CancellationToken())).Returns(eurSuccessResult);
 
-        CryptoCurrencyParameter usdParameter = new CryptoCurrencyParameter { SourceSymbol = Constants.BTC, TargetSymbol = Constants.USD };
+        var usdParameter = new CryptoCurrencyParameter { SourceSymbol = Constants.BTC, TargetSymbol = Constants.USD };
         var usdSuccessResult = GetQuoteSuccessResult(Constants.USD, Constants.BTCtoUSD);
         mockCryptoCurrencyClient.Setup(mock => mock.GetPriceAsync(It.Is<CryptoCurrencyParameter>(q => IsEqual(usdParameter, q)), new CancellationToken())).Returns(usdSuccessResult);
         #endregion
 
-        CryptoCurrencyQuotesLookupDto quotesLookup = new CryptoCurrencyQuotesLookupDto
+        var quotesLookup = new CryptoCurrencyQuotesLookupDto
         {
             SourceCryptoCurrencySymbol = Constants.BTCSymbol,
             TargeCurrencySymbols = new List<CurrencySymbol>{
@@ -147,7 +147,7 @@ internal class CryptoCurrencyServiceTests
         //Arrange
         var mockCryptoCurrencyClient = new Mock<ICryptoCurrencyClient>();
 
-        CryptoCurrencyQuotesLookupDto quotesLookup = new CryptoCurrencyQuotesLookupDto
+        var quotesLookup = new CryptoCurrencyQuotesLookupDto
         {
             SourceCryptoCurrencySymbol = Constants.BTCSymbol,
             TargeCurrencySymbols = new List<CurrencySymbol>()
@@ -178,7 +178,7 @@ internal class CryptoCurrencyServiceTests
         mockCryptoCurrencyClient.Setup(mock => mock.GetPriceAsync(It.IsAny<CryptoCurrencyParameter>(), new CancellationToken())).Returns(Task.FromResult(errorStatusResult));
         #endregion
 
-        CryptoCurrencyQuotesLookupDto quotesLookup = new CryptoCurrencyQuotesLookupDto
+        var quotesLookup = new CryptoCurrencyQuotesLookupDto
         {
             SourceCryptoCurrencySymbol = Constants.BTCSymbol,
             TargeCurrencySymbols = new List<CurrencySymbol> { Constants.USDSymbol }
@@ -202,7 +202,7 @@ internal class CryptoCurrencyServiceTests
         mockCryptoCurrencyClient.Setup(mock => mock.GetPriceAsync(It.IsAny<CryptoCurrencyParameter>(), new CancellationToken())).Throws<TimeoutRejectedException>();
         #endregion
 
-        CryptoCurrencyQuotesLookupDto quotesLookup = new CryptoCurrencyQuotesLookupDto
+        var quotesLookup = new CryptoCurrencyQuotesLookupDto
         {
             SourceCryptoCurrencySymbol = Constants.BTCSymbol,
             TargeCurrencySymbols = new List<CurrencySymbol> { Constants.USDSymbol }
@@ -227,7 +227,7 @@ internal class CryptoCurrencyServiceTests
         mockCryptoCurrencyClient.Setup(mock => mock.GetPriceAsync(It.IsAny<CryptoCurrencyParameter>(), new CancellationToken())).Throws(apiException);
         #endregion
 
-        CryptoCurrencyQuotesLookupDto quotesLookup = new CryptoCurrencyQuotesLookupDto
+        var quotesLookup = new CryptoCurrencyQuotesLookupDto
         {
             SourceCryptoCurrencySymbol = Constants.BTCSymbol,
             TargeCurrencySymbols = new List<CurrencySymbol> { Constants.USDSymbol }

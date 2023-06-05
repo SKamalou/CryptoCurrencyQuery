@@ -15,7 +15,10 @@ public class CryptoCurrencyService : ICryptoCurrencyService
 {
     private readonly ICryptoCurrencyClient _cryptoCurrencyClient;
 
-    public CryptoCurrencyService(ICryptoCurrencyClient cryptoCurrencyClient) => _cryptoCurrencyClient = cryptoCurrencyClient;
+    public CryptoCurrencyService(ICryptoCurrencyClient cryptoCurrencyClient)
+    {
+        _cryptoCurrencyClient = cryptoCurrencyClient ?? throw new ArgumentNullException(nameof(cryptoCurrencyClient));
+    }
 
     public async Task<IEnumerable<CurrencySymbol>> GetCryptoCurrencySymbolsAsync(CancellationToken cancellationToken)
     {
@@ -75,9 +78,11 @@ public class CryptoCurrencyService : ICryptoCurrencyService
             if (priceForSymbol == null)
                 throw new NotFoundException($"Price for convert {sourceCryptoCurrencySymbol.Symbol} to {targeCurrencySymbol.Symbol} was not found!");
 
-            var price= priceForSymbol.Quote?[targeCurrencySymbol.Symbol]?.Price;
+            var price = priceForSymbol.Quote?[targeCurrencySymbol.Symbol]?.Price;
             if (!price.HasValue)
+            {
                 throw new NotFoundException($"Price for convert {sourceCryptoCurrencySymbol.Symbol} to {targeCurrencySymbol.Symbol} was not provided!");
+            }
 
             return new Quote(price.Value);
         }

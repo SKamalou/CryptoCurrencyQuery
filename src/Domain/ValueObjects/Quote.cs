@@ -5,6 +5,9 @@ public class Quote : ValueObject
 
     public Quote(double price)
     {
+        if (price < 0)
+            throw new Exceptions.ValidationException("Price", "Price can not be negative.");
+
         this.Price = price;
     }
 

@@ -29,7 +29,7 @@ internal class GetCurrentQuotesTests
         #endregion
 
         #region Mock ICryptoCurrencyService
-        CryptoCurrencyQuotesLookupDto quotesLookup = new CryptoCurrencyQuotesLookupDto
+        var quotesLookup = new CryptoCurrencyQuotesLookupDto
         {
             SourceCryptoCurrencySymbol = Constants.BTCSymbol,
             TargeCurrencySymbols = new List<CurrencySymbol>{

@@ -11,6 +11,9 @@ public class CurrencySymbol : ValueObject
         if (symbol.Length > 10 || symbol.Length < 2)
             throw new Exceptions.ValidationException("Symbol", "Symbol must be a string with length of 2 to 10 character.");
 
+        if (symbol.Contains(" "))
+            throw new Exceptions.ValidationException("Symbol", "Symbol can not contain space.");
+
         this.Symbol = symbol.ToUpper();
     }
 

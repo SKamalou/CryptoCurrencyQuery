@@ -19,8 +19,8 @@ public class QuoteTest
     [Test]
     public void ShouldReturnNegativePriceForNullInput()
     {
-        var act = ()=>new Quote(null);
+        var act = () => new Quote(-1);
 
-        act.Should().Throw<CryptoCurrencyException>();
+        act.Should().Throw<ValidationException>();
     }
 }
