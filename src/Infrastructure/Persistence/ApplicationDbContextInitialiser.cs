@@ -50,7 +50,6 @@ public class ApplicationDbContextInitialiser
         {
             _context.PopularCurrencies.AddRange(
                 new PopularCurrency { Symbol = "USD" }
-                //TODO
                 //new PopularCurrency { Symbol = "EUR" },
                 //new PopularCurrency { Symbol = "BRL" },
                 //new PopularCurrency { Symbol = "GBP" },

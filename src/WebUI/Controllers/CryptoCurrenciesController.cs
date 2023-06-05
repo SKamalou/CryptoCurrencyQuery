@@ -31,7 +31,7 @@ public class CryptoCurrenciesController : ApiControllerBase
         if (_cache.TryGetValue(listOfCryptoCurrenciesCacheKey, out symbols))
             return Ok(symbols);
 
-        symbols = await Mediator.Send(new GetCryptoCurrenciesQuery(), cancellationToken);
+        symbols = (await Mediator.Send(new GetCryptoCurrenciesQuery(), cancellationToken)).ToList();
 
         var cacheConfig = _configuration.BindTo<CachingConfig>();
         var cacheEntryOptions = new DistributedCacheEntryOptions()
@@ -56,7 +56,7 @@ public class CryptoCurrenciesController : ApiControllerBase
     {
         await _cache.SetAsync(lastSelectedCryptoCurrencyCacheKey, symbol);
 
-        var command = new GetCurrentQuotesQuery { Symbol = symbol };
+        var command = new GetCurrentQuotesQuery(new CurrencySymbol(symbol));
         var result = await Mediator.Send(command, cancellationToken);
 
         return Ok(result);

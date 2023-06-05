@@ -6,6 +6,7 @@ show -1, when price not provided
 refactor all class and js to become one hand - use hook instead of all class component
 
 we can add loading component in fetching time
+we can add authentication page for login
 
 *1- CallApi
 *2- Architecure

@@ -4,9 +4,9 @@ using MediatR;
 
 namespace CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCryptoCurrencies;
 
-public record GetCryptoCurrenciesQuery : IRequest<List<CurrencySymbol>>;
+public record GetCryptoCurrenciesQuery : IRequest<IEnumerable<CurrencySymbol>>;
 
-public class GetCryptoCurrenciesQueryHandler : IRequestHandler<GetCryptoCurrenciesQuery, List<CurrencySymbol>>
+public class GetCryptoCurrenciesQueryHandler : IRequestHandler<GetCryptoCurrenciesQuery, IEnumerable<CurrencySymbol>>
 {
     private readonly ICryptoCurrencyService _cryptoCurrencyService;
 
@@ -15,7 +15,7 @@ public class GetCryptoCurrenciesQueryHandler : IRequestHandler<GetCryptoCurrenci
         _cryptoCurrencyService = cryptoCurrencyService ?? throw new ArgumentNullException(nameof(cryptoCurrencyService));
     }
 
-    public async Task<List<CurrencySymbol>> Handle(GetCryptoCurrenciesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<CurrencySymbol>> Handle(GetCryptoCurrenciesQuery request, CancellationToken cancellationToken)
     {
         var result = await _cryptoCurrencyService.GetCryptoCurrencySymbolsAsync(cancellationToken);
         return result.ToList();

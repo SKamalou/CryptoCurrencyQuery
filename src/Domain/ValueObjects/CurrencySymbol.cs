@@ -1,6 +1,4 @@
-﻿using CryptoCurrencyQuery.Domain.Exceptions;
-
-namespace CryptoCurrencyQuery.Domain.ValueObjects;
+﻿namespace CryptoCurrencyQuery.Domain.ValueObjects;
 public class CurrencySymbol : ValueObject
 {
     public string Symbol { get; private set; }
@@ -8,10 +6,10 @@ public class CurrencySymbol : ValueObject
     public CurrencySymbol(string symbol)
     {
         if (string.IsNullOrEmpty(symbol))
-            throw new InvalidSymbolException();
+            throw new Exceptions.ValidationException("Symbol", "Symbol can not be null or empty.");
 
         if (symbol.Length > 10 || symbol.Length < 2)
-            throw new InvalidSymbolException();
+            throw new Exceptions.ValidationException("Symbol", "Symbol must be a string with length of 2 to 10 character.");
 
         this.Symbol = symbol.ToUpper();
     }

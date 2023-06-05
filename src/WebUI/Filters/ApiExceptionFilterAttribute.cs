@@ -1,4 +1,5 @@
 ﻿using CryptoCurrencyQuery.Application.Common.Exceptions;
+using CryptoCurrencyQuery.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WebUI.Models;

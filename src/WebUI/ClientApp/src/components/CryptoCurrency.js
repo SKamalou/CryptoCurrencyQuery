@@ -84,9 +84,9 @@ export function CryptoCurrency() {
         </thead>
         <tbody>
           {quotes.map(item =>
-						<tr key={item.symbol}>
-							<td>{item.symbol}</td>
-							<td>{item.price}</td>
+            <tr key={item.symbol.symbol}>
+              <td>{item.symbol.symbol}</td>
+              <td>{item.quote.price}</td>
             </tr>
           )}
         </tbody>

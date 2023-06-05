@@ -1,4 +1,5 @@
-﻿using CryptoCurrencyQuery.Domain.ValueObjects;
+﻿using CryptoCurrencyQuery.Domain.Exceptions;
+using CryptoCurrencyQuery.Domain.ValueObjects;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -18,8 +19,8 @@ public class QuoteTest
     [Test]
     public void ShouldReturnNegativePriceForNullInput()
     {
-        var quote = new Quote(null);
+        var act = ()=>new Quote(null);
 
-        quote.Price.Should().Be(-1);
+        act.Should().Throw<CryptoCurrencyException>();
     }
 }

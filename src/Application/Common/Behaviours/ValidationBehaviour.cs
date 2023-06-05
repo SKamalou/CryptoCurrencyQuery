@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using ValidationException = CryptoCurrencyQuery.Application.Common.Exceptions.ValidationException;
 
 namespace CryptoCurrencyQuery.Application.Common.Behaviours;
 
@@ -27,10 +26,16 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
             var failures = validationResults
                 .Where(r => r.Errors.Any())
                 .SelectMany(r => r.Errors)
-                .ToList();
+            .ToList();
 
             if (failures.Any())
-                throw new ValidationException(failures);
+            {
+                var errors = failures
+                    .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
+                    .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
+
+                throw new Domain.Exceptions.ValidationException(errors);
+            }
         }
         return await next();
     }

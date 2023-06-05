@@ -1,5 +1,7 @@
-﻿using CryptoCurrencyQuery.Application.Common.Interfaces;
+﻿using CryptoCurrencyQuery.Application.Common.Exceptions;
+using CryptoCurrencyQuery.Application.Common.Interfaces;
 using CryptoCurrencyQuery.Application.Common.Models;
+using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCurrentQuotes;
 using CryptoCurrencyQuery.Domain.Exceptions;
 using CryptoCurrencyQuery.Domain.ValueObjects;
 using CryptoCurrencyQuery.Infrastructure.Common;
@@ -22,13 +24,13 @@ public class CryptoCurrencyService : ICryptoCurrencyService
         return cryptoCurrencies.Select(cryptoCurrency => new CurrencySymbol(cryptoCurrency.Symbol));
     }
 
-    public async Task<Dictionary<CurrencySymbol, Quote>> GetCryptoCurrencyQuotesAsync(CryptoCurrencyQuotesLookupDto quotesLookup, CancellationToken cancellationToken)
+    public async Task<IEnumerable<CryptoCurrencyQuoteDto>> GetCryptoCurrencyQuotesAsync(CryptoCurrencyQuotesLookupDto quotesLookup, CancellationToken cancellationToken)
     {
-        var quotes = new Dictionary<CurrencySymbol, Quote>();
+        var quotes = new List<CryptoCurrencyQuoteDto>();
         foreach (CurrencySymbol symbol in quotesLookup.TargeCurrencySymbols)
         {
             var quote = await GetCryptoCurrencyQuoteAsync(quotesLookup.SourceCryptoCurrencySymbol, symbol, cancellationToken);
-            quotes.Add(symbol, quote);
+            quotes.Add(new CryptoCurrencyQuoteDto(symbol, quote));
         }
 
         return quotes;
@@ -65,14 +67,19 @@ public class CryptoCurrencyService : ICryptoCurrencyService
             if (result.Status?.ErrorCode > 0)
                 throw new CryptoCurrencyException(result.Status.ErrorCode, result.Status.ErrorMessage);
 
-            double? price =
+            var priceForSymbol =
                 result
                 .Data?[sourceCryptoCurrencySymbol.Symbol]
-                .FirstOrDefault(currency => sourceCryptoCurrencySymbol.Symbol.Equals(currency.Symbol))?
-                .Quote?[targeCurrencySymbol.Symbol]?.
-                Price;
+                .FirstOrDefault(currency => sourceCryptoCurrencySymbol.Symbol.Equals(currency.Symbol));
 
-            return new Quote(price);
+            if (priceForSymbol == null)
+                throw new NotFoundException($"Price for convert {sourceCryptoCurrencySymbol.Symbol} to {targeCurrencySymbol.Symbol} was not found!");
+
+            var price= priceForSymbol.Quote?[targeCurrencySymbol.Symbol]?.Price;
+            if (!price.HasValue)
+                throw new NotFoundException($"Price for convert {sourceCryptoCurrencySymbol.Symbol} to {targeCurrencySymbol.Symbol} was not provided!");
+
+            return new Quote(price.Value);
         }
         catch (ApiException ex)
         {
