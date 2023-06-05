@@ -1,6 +1,4 @@
-﻿using CryptoCurrencyQuery.Application.Common.Interfaces;
-using CryptoCurrencyQuery.Application.Common.Models;
-using CryptoCurrencyQuery.Domain.ValueObjects;
+﻿using CryptoCurrencyQuery.Domain.ValueObjects;
 using MediatR;
 
 namespace CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCurrentQuotes;

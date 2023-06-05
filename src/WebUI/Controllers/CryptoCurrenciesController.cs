@@ -5,6 +5,7 @@ using CryptoCurrencyQuery.Infrastructure.Common;
 using CryptoCurrencyQuery.Infrastructure.Configs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using WebUI.Models;
 
 namespace CryptoCurrencyQuery.WebUI.Controllers;
 
@@ -23,6 +24,8 @@ public class CryptoCurrenciesController : ApiControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(ApiSuccessResult<List<CurrencySymbol>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiFailureResult<ProblemDetails>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<CurrencySymbol>>> GetAllCryptoCurrencies(CancellationToken cancellationToken)
     {
         List<CurrencySymbol> symbols;
@@ -42,6 +45,7 @@ public class CryptoCurrenciesController : ApiControllerBase
     }
 
     [HttpGet("selected")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public async Task<ActionResult<string?>> GetLastSelectedCryptoCurrency()
     {
         if (_cache.TryGetValue(lastSelectedCryptoCurrencyCacheKey, out string? symbol))
@@ -51,6 +55,10 @@ public class CryptoCurrenciesController : ApiControllerBase
     }
 
     [HttpGet("quotes/{symbol}")]
+    [ProducesResponseType(typeof(ApiSuccessResult<List<CryptoCurrencyQuoteDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiFailureResult<ValidationProblemDetails>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiFailureResult<ProblemDetails>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiFailureResult<ProblemDetails>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<CryptoCurrencyQuoteDto>>> GetCryptoCurrencyDetails(string symbol, CancellationToken cancellationToken)
     {
         var currencySymbol = new CurrencySymbol(symbol);
