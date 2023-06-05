@@ -1,7 +1,7 @@
 # Crypto Currency Solution
 
-This application first gets a list of all cryptocurrencies from CoinMarketCap using the API below. Since changes in the cryptocurrency list rarely happen, it caches the list for up to 2 hours and does not query that API again within that time frame (which is adjustable).
-https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest
+This application first gets a list of all cryptocurrencies from CoinMarketCap using the [listings API](https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest). Since changes in the cryptocurrency list rarely happen, it caches the list for up to 2 hours and does not query that API again within that time frame (which is adjustable).
+
 
 You can then select a symbol from that list, and it retrieves the price for that cryptocurrency in 5 common currencies by calling the API below for each currency (the list of supported currencies is stored in the database).
 https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=BTC&convert=EUR
