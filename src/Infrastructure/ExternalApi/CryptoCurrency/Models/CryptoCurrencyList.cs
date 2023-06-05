@@ -1,6 +1,6 @@
 ﻿namespace CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency.Models;
-public class CryptoCurrencyList
+public record CryptoCurrencyList
 {
     public CryptoCurrencyResponseStatus Status { get; set; }
-    public List<CryptoCurrencyDto> Data { get; set; }
+    public List<CryptoCurrencyInfo> Data { get; set; }
 }

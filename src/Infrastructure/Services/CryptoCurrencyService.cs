@@ -11,7 +11,7 @@ using Polly.Timeout;
 using Refit;
 
 namespace CryptoCurrencyQuery.Infrastructure.Services;
-public class CryptoCurrencyService : ICryptoCurrencyService
+internal class CryptoCurrencyService : ICryptoCurrencyService
 {
     private readonly ICryptoCurrencyClient _cryptoCurrencyClient;
 
@@ -39,7 +39,7 @@ public class CryptoCurrencyService : ICryptoCurrencyService
         return quotes;
     }
 
-    private async Task<List<CryptoCurrencyDto>> GetListAsync(CancellationToken cancellationToken)
+    private async Task<List<CryptoCurrencyInfo>> GetListAsync(CancellationToken cancellationToken)
     {
         try
         {

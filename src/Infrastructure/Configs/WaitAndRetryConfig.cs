@@ -1,5 +1,5 @@
 ﻿namespace CryptoCurrencyQuery.Infrastructure.Configs;
-internal class WaitAndRetryConfig
+internal record WaitAndRetryConfig
 {
     public int Retry { get; set; }
     public int Wait { get; set; }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CryptoCurrencyQuery.Infrastructure.Persistence.Configurations;
 
-public class PopularCurrencyConfiguration : IEntityTypeConfiguration<PopularCurrency>
+internal class PopularCurrencyConfiguration : IEntityTypeConfiguration<PopularCurrency>
 {
     public void Configure(EntityTypeBuilder<PopularCurrency> builder)
     {

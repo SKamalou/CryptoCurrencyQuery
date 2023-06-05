@@ -1,5 +1,5 @@
 ﻿namespace CryptoCurrencyQuery.Infrastructure.Configs;
-public class CachingConfig
+public record CachingConfig
 {
     public double CryptoCurrenciesExpireTimeInMinute { get; set; }
 }

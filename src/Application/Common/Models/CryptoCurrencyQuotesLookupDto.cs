@@ -1,27 +1,13 @@
 ﻿using CryptoCurrencyQuery.Domain.ValueObjects;
 
 namespace CryptoCurrencyQuery.Application.Common.Models;
-public class CryptoCurrencyQuotesLookupDto
+public record CryptoCurrencyQuotesLookupDto(CurrencySymbol SourceCryptoCurrencySymbol, IEnumerable<CurrencySymbol> TargeCurrencySymbols)
 {
-    public CurrencySymbol SourceCryptoCurrencySymbol { get; set; }
-    public IEnumerable<CurrencySymbol> TargeCurrencySymbols { get; set; }
-
-    public override bool Equals(object? obj)
+    public virtual bool Equals(CryptoCurrencyQuotesLookupDto other)
     {
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return false;
-        }
-
-        var input = (CryptoCurrencyQuotesLookupDto)obj;
-
         return
-            SourceCryptoCurrencySymbol.Equals(input.SourceCryptoCurrencySymbol) &&
-            TargeCurrencySymbols.OrderBy(x => x.Symbol).SequenceEqual(input.TargeCurrencySymbols.OrderBy(x => x.Symbol));
-    }
-
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
+            other != null &&
+            SourceCryptoCurrencySymbol == other.SourceCryptoCurrencySymbol &&
+            TargeCurrencySymbols.OrderBy(a => a.Symbol).SequenceEqual(other.TargeCurrencySymbols.OrderBy(a => a.Symbol));
     }
 }

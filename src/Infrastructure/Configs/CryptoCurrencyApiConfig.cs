@@ -1,5 +1,5 @@
 ﻿namespace CryptoCurrencyQuery.Infrastructure.Configs;
-internal class CryptoCurrencyApiConfig
+internal record CryptoCurrencyApiConfig
 {
     public string BaseAddress { get; set; }
     public string ApiKey { get; set; }

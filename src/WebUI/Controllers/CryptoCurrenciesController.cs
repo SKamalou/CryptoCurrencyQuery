@@ -5,7 +5,6 @@ using CryptoCurrencyQuery.Infrastructure.Common;
 using CryptoCurrencyQuery.Infrastructure.Configs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Configuration;
 
 namespace CryptoCurrencyQuery.WebUI.Controllers;
 
@@ -17,7 +16,7 @@ public class CryptoCurrenciesController : ApiControllerBase
     private readonly IDistributedCache _cache;
     private readonly IConfiguration _configuration;
 
-    public CryptoCurrenciesController(IDistributedCache cache,IConfiguration configuration)
+    public CryptoCurrenciesController(IDistributedCache cache, IConfiguration configuration)
     {
         _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -54,10 +53,11 @@ public class CryptoCurrenciesController : ApiControllerBase
     [HttpGet("quotes/{symbol}")]
     public async Task<ActionResult<List<CryptoCurrencyQuoteDto>>> GetCryptoCurrencyDetails(string symbol, CancellationToken cancellationToken)
     {
-        await _cache.SetAsync(lastSelectedCryptoCurrencyCacheKey, symbol);
-
-        var command = new GetCurrentQuotesQuery(new CurrencySymbol(symbol));
+        var currencySymbol = new CurrencySymbol(symbol);
+        var command = new GetCurrentQuotesQuery(currencySymbol);
         var result = await Mediator.Send(command, cancellationToken);
+
+        await _cache.SetAsync(lastSelectedCryptoCurrencyCacheKey, symbol);
 
         return Ok(result);
     }

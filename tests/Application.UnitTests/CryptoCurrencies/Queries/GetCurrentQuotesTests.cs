@@ -30,13 +30,13 @@ internal class GetCurrentQuotesTests
 
         #region Mock ICryptoCurrencyService
         var quotesLookup = new CryptoCurrencyQuotesLookupDto
-        {
-            SourceCryptoCurrencySymbol = Constants.BTCSymbol,
-            TargeCurrencySymbols = new List<CurrencySymbol>{
+        (
+            SourceCryptoCurrencySymbol : Constants.BTCSymbol,
+            TargeCurrencySymbols : new List<CurrencySymbol>{
                 Constants.USDSymbol,
                 Constants.EURSymbol,
             }
-        };
+        );
 
         IEnumerable<CryptoCurrencyQuoteDto> successResult = new List<CryptoCurrencyQuoteDto>
         {

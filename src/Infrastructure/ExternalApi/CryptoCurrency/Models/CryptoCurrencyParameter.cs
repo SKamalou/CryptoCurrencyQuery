@@ -1,7 +1,7 @@
 ﻿using Refit;
 
 namespace CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency.Models;
-public class CryptoCurrencyParameter
+public record CryptoCurrencyParameter
 {
     [AliasAs("symbol")]
     public string SourceSymbol { get; set; }

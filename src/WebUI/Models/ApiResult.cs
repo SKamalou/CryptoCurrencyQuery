@@ -1,6 +1,6 @@
 ﻿namespace WebUI.Models;
 
-public abstract class ApiResult<TResult>
+internal abstract class ApiResult<TResult>
 {
     public ApiResult(bool success, TResult data)
     {

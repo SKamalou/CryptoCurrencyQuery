@@ -21,10 +21,10 @@ internal class CryptoCurrencyServiceTests
         var successResult = new CryptoCurrencyList
         {
             Status = new CryptoCurrencyResponseStatus { ErrorCode = 0, ErrorMessage = null },
-            Data = new List<CryptoCurrencyDto> {
-                new CryptoCurrencyDto { Id = 1, Symbol= Constants.BTC,Name= "Bitcoin" },
-                new CryptoCurrencyDto { Id = 1027, Symbol= Constants.ETH,Name= "Ethereum" },
-                new CryptoCurrencyDto { Id = 825, Symbol= Constants.BNB,Name= "Binance" }
+            Data = new List<CryptoCurrencyInfo> {
+                new CryptoCurrencyInfo { Id = 1, Symbol= Constants.BTC,Name= "Bitcoin" },
+                new CryptoCurrencyInfo { Id = 1027, Symbol= Constants.ETH,Name= "Ethereum" },
+                new CryptoCurrencyInfo { Id = 825, Symbol= Constants.BNB,Name= "Binance" }
             }
         };
 
@@ -112,23 +112,23 @@ internal class CryptoCurrencyServiceTests
         #region Mock ICryptoCurrencyClient
         var mockCryptoCurrencyClient = new Mock<ICryptoCurrencyClient>();
 
-        var eurParameter = new CryptoCurrencyParameter { SourceSymbol = Constants.BTC, TargetSymbol = Constants.EUR };
+        var eurParameter = new CryptoCurrencyParameter { SourceSymbol = Constants.BTC, TargetSymbol= Constants.EUR};
         var eurSuccessResult = GetQuoteSuccessResult(Constants.EUR, Constants.BTCtoEUR);
-        mockCryptoCurrencyClient.Setup(mock => mock.GetPriceAsync(It.Is<CryptoCurrencyParameter>(q => IsEqual(eurParameter, q)), new CancellationToken())).Returns(eurSuccessResult);
+        mockCryptoCurrencyClient.Setup(mock => mock.GetPriceAsync(eurParameter, new CancellationToken())).Returns(eurSuccessResult);
 
         var usdParameter = new CryptoCurrencyParameter { SourceSymbol = Constants.BTC, TargetSymbol = Constants.USD };
         var usdSuccessResult = GetQuoteSuccessResult(Constants.USD, Constants.BTCtoUSD);
-        mockCryptoCurrencyClient.Setup(mock => mock.GetPriceAsync(It.Is<CryptoCurrencyParameter>(q => IsEqual(usdParameter, q)), new CancellationToken())).Returns(usdSuccessResult);
+        mockCryptoCurrencyClient.Setup(mock => mock.GetPriceAsync(usdParameter, new CancellationToken())).Returns(usdSuccessResult);
         #endregion
 
         var quotesLookup = new CryptoCurrencyQuotesLookupDto
-        {
-            SourceCryptoCurrencySymbol = Constants.BTCSymbol,
-            TargeCurrencySymbols = new List<CurrencySymbol>{
+        (
+            SourceCryptoCurrencySymbol: Constants.BTCSymbol,
+            TargeCurrencySymbols: new List<CurrencySymbol>{
                 Constants.USDSymbol,
                 Constants.EURSymbol,
             }
-        };
+        );
         var cryptoCurrencyService = new CryptoCurrencyService(mockCryptoCurrencyClient.Object);
 
         //Act
@@ -147,11 +147,7 @@ internal class CryptoCurrencyServiceTests
         //Arrange
         var mockCryptoCurrencyClient = new Mock<ICryptoCurrencyClient>();
 
-        var quotesLookup = new CryptoCurrencyQuotesLookupDto
-        {
-            SourceCryptoCurrencySymbol = Constants.BTCSymbol,
-            TargeCurrencySymbols = new List<CurrencySymbol>()
-        };
+        var quotesLookup = new CryptoCurrencyQuotesLookupDto(Constants.BTCSymbol, new List<CurrencySymbol>());
         var cryptoCurrencyService = new CryptoCurrencyService(mockCryptoCurrencyClient.Object);
 
         //Act
@@ -179,10 +175,10 @@ internal class CryptoCurrencyServiceTests
         #endregion
 
         var quotesLookup = new CryptoCurrencyQuotesLookupDto
-        {
-            SourceCryptoCurrencySymbol = Constants.BTCSymbol,
-            TargeCurrencySymbols = new List<CurrencySymbol> { Constants.USDSymbol }
-        };
+        (
+            SourceCryptoCurrencySymbol: Constants.BTCSymbol,
+            TargeCurrencySymbols: new List<CurrencySymbol> { Constants.USDSymbol }
+        );
         var cryptoCurrencyService = new CryptoCurrencyService(mockCryptoCurrencyClient.Object);
 
         //Act
@@ -203,10 +199,10 @@ internal class CryptoCurrencyServiceTests
         #endregion
 
         var quotesLookup = new CryptoCurrencyQuotesLookupDto
-        {
-            SourceCryptoCurrencySymbol = Constants.BTCSymbol,
-            TargeCurrencySymbols = new List<CurrencySymbol> { Constants.USDSymbol }
-        };
+        (
+            SourceCryptoCurrencySymbol: Constants.BTCSymbol,
+            TargeCurrencySymbols: new List<CurrencySymbol> { Constants.USDSymbol }
+        );
         var cryptoCurrencyService = new CryptoCurrencyService(mockCryptoCurrencyClient.Object);
 
         //Act
@@ -228,10 +224,10 @@ internal class CryptoCurrencyServiceTests
         #endregion
 
         var quotesLookup = new CryptoCurrencyQuotesLookupDto
-        {
-            SourceCryptoCurrencySymbol = Constants.BTCSymbol,
-            TargeCurrencySymbols = new List<CurrencySymbol> { Constants.USDSymbol }
-        };
+        (
+            SourceCryptoCurrencySymbol: Constants.BTCSymbol,
+            TargeCurrencySymbols: new List<CurrencySymbol> { Constants.USDSymbol }
+        );
         var cryptoCurrencyService = new CryptoCurrencyService(mockCryptoCurrencyClient.Object);
 
         //Act
@@ -246,13 +242,13 @@ internal class CryptoCurrencyServiceTests
         var result = new CryptoCurrencyQuotes
         {
             Status = new CryptoCurrencyResponseStatus { ErrorCode = 0, ErrorMessage = null },
-            Data = new Dictionary<string, List<CryptoCurrencyDto>>
+            Data = new Dictionary<string, List<CryptoCurrencyInfo>>
             {
                 {
                     Constants.BTC,
-                    new List<CryptoCurrencyDto>
+                    new List<CryptoCurrencyInfo>
                     {
-                        new CryptoCurrencyDto{
+                        new CryptoCurrencyInfo{
                             Id = 1,
                             Symbol = Constants.BTC,
                             Name = "Bitcoin",

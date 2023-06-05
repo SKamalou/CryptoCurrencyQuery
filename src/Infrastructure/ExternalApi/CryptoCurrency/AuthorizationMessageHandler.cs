@@ -1,10 +1,9 @@
-﻿using System.Net.Http.Headers;
-using CryptoCurrencyQuery.Infrastructure.Common;
+﻿using CryptoCurrencyQuery.Infrastructure.Common;
 using CryptoCurrencyQuery.Infrastructure.Configs;
 using Microsoft.Extensions.Configuration;
 
 namespace CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency;
-public class AuthorizationMessageHandler : DelegatingHandler
+internal class AuthorizationMessageHandler : DelegatingHandler
 {
     private const string ApiKeyHeaderKey = "X-CMC_PRO_API_KEY";
     private readonly IConfiguration _configuration;
