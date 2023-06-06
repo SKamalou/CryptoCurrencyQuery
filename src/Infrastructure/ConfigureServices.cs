@@ -1,5 +1,4 @@
 ﻿using CryptoCurrencyQuery.Application.Common.Interfaces;
-using CryptoCurrencyQuery.Infrastructure.Common;
 using CryptoCurrencyQuery.Infrastructure.Configs;
 using CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency;
 using CryptoCurrencyQuery.Infrastructure.Persistence;
@@ -20,6 +19,7 @@ public static class ConfigureServices
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+        services.AddTransient<IConfigurationService, ConfigurationService>();
 
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
@@ -37,7 +37,10 @@ public static class ConfigureServices
 
         services.AddScoped<ApplicationDbContextInitialiser>();
 
-        var waitAndRetryConfig = configuration.BindTo<WaitAndRetryConfig>();
+        var serviceProvider = services.BuildServiceProvider();
+        var configurationService = serviceProvider.GetRequiredService<IConfigurationService>();
+
+        var waitAndRetryConfig = configurationService.GetConfig<WaitAndRetryConfig>();
 
         AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
             .HandleTransientHttpError()
@@ -47,7 +50,7 @@ public static class ConfigureServices
         AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy
             .TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(waitAndRetryConfig.Timeout));
 
-        var apiConfig = configuration.BindTo<CryptoCurrencyApiConfig>();
+        var apiConfig = configurationService.GetConfig<CryptoCurrencyApiConfig>();
         services.AddTransient<AuthorizationMessageHandler>();
         services.AddRefitClient<ICryptoCurrencyClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(apiConfig.BaseAddress))

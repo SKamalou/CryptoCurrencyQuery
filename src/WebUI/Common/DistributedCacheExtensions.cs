@@ -3,9 +3,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace CryptoCurrencyQuery.Infrastructure.Common;
+namespace CryptoCurrencyQuery.WebUI.Common;
 
-public static class DistributedCacheExtensions
+internal static class DistributedCacheExtensions
 {
     public static Task SetAsync<T>(this IDistributedCache cache, string key, T value)
     {

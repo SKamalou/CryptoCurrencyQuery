@@ -6,7 +6,7 @@ using WebUI.Models;
 
 namespace CryptoCurrencyQuery.WebUI.Filters;
 
-public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
+internal class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
     private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 

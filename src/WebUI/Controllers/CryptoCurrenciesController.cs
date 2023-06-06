@@ -1,8 +1,9 @@
-﻿using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCryptoCurrencies;
+﻿using CryptoCurrencyQuery.Application.Common.Interfaces;
+using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCryptoCurrencies;
 using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCurrentQuotes;
 using CryptoCurrencyQuery.Domain.ValueObjects;
-using CryptoCurrencyQuery.Infrastructure.Common;
-using CryptoCurrencyQuery.Infrastructure.Configs;
+using CryptoCurrencyQuery.WebUI.Common;
+using CryptoCurrencyQuery.WebUI.Configs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using WebUI.Models;
@@ -15,12 +16,12 @@ public class CryptoCurrenciesController : ApiControllerBase
     private const string listOfCryptoCurrenciesCacheKey = "ListOfCryptoCurrenciesCacheKey";
 
     private readonly IDistributedCache _cache;
-    private readonly IConfiguration _configuration;
+    private readonly IConfigurationService _configurationService;
 
-    public CryptoCurrenciesController(IDistributedCache cache, IConfiguration configuration)
+    public CryptoCurrenciesController(IDistributedCache cache, IConfigurationService configurationService)
     {
         _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        _configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
     }
 
     [HttpGet]
@@ -35,7 +36,7 @@ public class CryptoCurrenciesController : ApiControllerBase
 
         symbols = (await Mediator.Send(new GetCryptoCurrenciesQuery(), cancellationToken)).ToList();
 
-        var cacheConfig = _configuration.BindTo<CachingConfig>();
+        var cacheConfig = _configurationService.GetConfig<CachingConfig>();
         var cacheEntryOptions = new DistributedCacheEntryOptions()
                         .SetAbsoluteExpiration(TimeSpan.FromMinutes(cacheConfig.CryptoCurrenciesExpireTimeInMinute));
 
