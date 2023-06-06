@@ -18,7 +18,9 @@ I personally love the record feature in C#, both because of its positional synta
 I am also happy that primary constructors have been added to the class in version 12.
 
 For example, I have used records extensively in this project, such as defining the GetCurrentQuotesQuery record:
-public record GetCurrentQuotesQuery(CurrencySymbol Symbol) : IRequest<IEnumerable<CryptoCurrencyQuoteDto>>
+```csharp
+public record GetCurrentQuotesQuery(CurrencySymbol Symbol) : IRequest<IEnumerable<CryptoCurrencyQuoteDto>>;
+```
 This record represents a request to get the current quotes for a given symbol, and it is very convenient to define and use.
 
 
