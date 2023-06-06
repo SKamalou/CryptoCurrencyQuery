@@ -47,7 +47,7 @@ public class CryptoCurrenciesController : ApiControllerBase
 
     [HttpGet("selected")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public async Task<ActionResult<string?>> GetLastSelectedCryptoCurrency()
+    public ActionResult<string?> GetLastSelectedCryptoCurrency()
     {
         if (_cache.TryGetValue(lastSelectedCryptoCurrencyCacheKey, out string? symbol))
             return Ok(symbol);
