@@ -22,7 +22,7 @@ export class NavMenu extends Component {
   }
 
   redirectToSwagger() {
-    this.location = "/swagger";
+    window.open('/swagger', '_blank');
   }
 
   render() {
@@ -37,7 +37,7 @@ export class NavMenu extends Component {
                 <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/swagger" onClick={this.redirectToSwagger} >Swagger</NavLink>
+                <NavLink tag={Link} className="text-dark" onClick={this.redirectToSwagger} >Swagger</NavLink>
               </NavItem>
             </ul>
           </Collapse>
