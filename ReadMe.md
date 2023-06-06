@@ -7,7 +7,7 @@ You can then select a symbol from that list, and it retrieves the price for that
 Naturally, we know that it's not efficient to call an API for each currency, and I spent a lot of time finding a better solution. However, the free plan from CoinMarketCap only allows you to convert a cryptocurrency to one currency per request, but paid plans allow you to get the price for a cryptocurrency in multiple currencies with one request.
 
 Alternative solution:
-There was another solution to reduce the number of API calls made. First, we can use the CoinMarketCap Quotes API above to get the price of the desired cryptocurrency in euros from CoinMarketCap. Then, we can use the [Exchangerates API](http://api.exchangeratesapi.io/latest?access_key=[YourKey]&base=EUR&symbols=GBP,USD,BRL,AUD) to get the conversion rate of euros to other currencies from exchangeratesapi with one API call. (Exchangeratesapi only allows EUR conversion with other currencies in the free plan)
+There was another solution to reduce the number of API calls made. First, we can use the CoinMarketCap Quotes API above to get the price of the desired cryptocurrency in euros. Then, we can use the [Exchangerates API](http://api.exchangeratesapi.io/latest?access_key=[YourKey]&base=EUR&symbols=GBP,USD,BRL,AUD) to get the conversion rate of euros to other currencies from exchangeratesapi with one API call. (Exchangeratesapi only allows euros conversion with other currencies in the free plan)
 
 Then, based on the result, we can calculate the price of the desired cryptocurrency in other currencies ourselves. This way, we can achieve our desired result with just two API requests.
 However, in my opinion, this solution has two problems. First, we become dependent on two different APIs, and if either of them encounters a problem, our site will face issues. Second, we are getting data from two different sites and do not have a specific reference for prices, which could be problematic from a business perspective, and users may not receive consistent prices.
@@ -50,4 +50,4 @@ This layer contains classes for accessing external resources such as file system
 
 ### WebUI
 
-This layer is a single page application based on Angular 14 and ASP.NET Core 7. This layer depends on both the Application and Infrastructure layers, however, the dependency on Infrastructure is only to support dependency injection. Therefore only *Startup.cs* should reference Infrastructure.
+This layer is a single page application based on React 18.2 and ASP.NET Core 7. This layer depends on both the Application and Infrastructure layers, however, the dependency on Infrastructure is only to support dependency injection. Therefore only *Startup.cs* should reference Infrastructure.
