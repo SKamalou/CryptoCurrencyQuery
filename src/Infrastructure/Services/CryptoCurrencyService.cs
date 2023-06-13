@@ -2,7 +2,7 @@
 using CryptoCurrencyQuery.Application.Common.Interfaces;
 using CryptoCurrencyQuery.Application.Common.Models;
 using CryptoCurrencyQuery.Application.CryptoCurrencies.Queries.GetCurrentQuotes;
-using CryptoCurrencyQuery.Domain.Exceptions;
+using CryptoCurrencyQuery.Infrastructure.Exceptions;
 using CryptoCurrencyQuery.Domain.ValueObjects;
 using CryptoCurrencyQuery.Infrastructure.Common;
 using CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency;
@@ -56,7 +56,7 @@ internal class CryptoCurrencyService : ICryptoCurrencyService
         }
         catch (TimeoutRejectedException ex)
         {
-            throw new CryptoCurrencyException(ex.Message, ex);
+            throw ex.ToCryptoCurrencyException();
         }
     }
 
@@ -92,7 +92,7 @@ internal class CryptoCurrencyService : ICryptoCurrencyService
         }
         catch (TimeoutRejectedException ex)
         {
-            throw new CryptoCurrencyException(ex.Message, ex);
+            throw ex.ToCryptoCurrencyException();
         }
     }
 }

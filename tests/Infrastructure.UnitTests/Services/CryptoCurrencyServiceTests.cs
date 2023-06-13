@@ -1,5 +1,5 @@
 ﻿using CryptoCurrencyQuery.Application.Common.Models;
-using CryptoCurrencyQuery.Domain.Exceptions;
+using CryptoCurrencyQuery.Infrastructure.Exceptions;
 using CryptoCurrencyQuery.Domain.ValueObjects;
 using CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency;
 using CryptoCurrencyQuery.Infrastructure.ExternalApi.CryptoCurrency.Models;

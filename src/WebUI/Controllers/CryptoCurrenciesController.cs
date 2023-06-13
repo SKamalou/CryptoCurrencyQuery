@@ -45,7 +45,7 @@ public class CryptoCurrenciesController : ApiControllerBase
         return Ok(symbols);
     }
 
-    [HttpGet("selected")]
+    [HttpGet("lastSelected")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public ActionResult<string?> GetLastSelectedCryptoCurrency()
     {

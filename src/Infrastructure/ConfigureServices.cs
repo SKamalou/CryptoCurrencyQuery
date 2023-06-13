@@ -60,8 +60,6 @@ public static class ConfigureServices
 
         services.AddTransient<ICryptoCurrencyService, CryptoCurrencyService>();
 
-        services.AddDistributedMemoryCache();
-
         return services;
     }
 }
