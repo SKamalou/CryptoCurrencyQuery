@@ -49,11 +49,11 @@ public class ApplicationDbContextInitialiser
         if (!_context.PopularCurrencies.Any())
         {
             _context.PopularCurrencies.AddRange(
-                new PopularCurrency { Symbol = "USD" },
-                new PopularCurrency { Symbol = "EUR" },
-                new PopularCurrency { Symbol = "BRL" },
-                new PopularCurrency { Symbol = "GBP" },
-                new PopularCurrency { Symbol = "AUD" }
+                new PopularCurrency { Symbol = "USD", Title = "United States Dollar" },
+                new PopularCurrency { Symbol = "EUR", Title = "Euro" },
+                new PopularCurrency { Symbol = "BRL", Title = "Brazilian Real" },
+                new PopularCurrency { Symbol = "GBP", Title = "Pound sterling" },
+                new PopularCurrency { Symbol = "AUD", Title = "Australian Dollar" }
                 );
 
             await _context.SaveChangesAsync();

@@ -2,7 +2,6 @@
 using CryptoCurrencyQuery.Application.Common.Interfaces;
 using CryptoCurrencyQuery.Domain.Entities;
 using CryptoCurrencyQuery.Infrastructure.Persistence.Interceptors;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CryptoCurrencyQuery.Infrastructure.Persistence;
