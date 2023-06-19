@@ -40,7 +40,7 @@ public class CryptoCurrenciesController : ApiControllerBase
         var cacheEntryOptions = new DistributedCacheEntryOptions()
                         .SetAbsoluteExpiration(TimeSpan.FromMinutes(cacheConfig.CryptoCurrenciesExpireTimeInMinute));
 
-        await _cache.SetAsync(listOfCryptoCurrenciesCacheKey, symbols, cacheEntryOptions);
+        _ = _cache.SetAsync(listOfCryptoCurrenciesCacheKey, symbols, cacheEntryOptions);
 
         return Ok(symbols);
     }
@@ -66,7 +66,7 @@ public class CryptoCurrenciesController : ApiControllerBase
         var command = new GetCurrentQuotesQuery(currencySymbol);
         var result = await Mediator.Send(command, cancellationToken);
 
-        await _cache.SetAsync(lastSelectedCryptoCurrencyCacheKey, symbol);
+        _ = _cache.SetAsync(lastSelectedCryptoCurrencyCacheKey, symbol);
 
         return Ok(result);
     }
